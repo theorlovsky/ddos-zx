@@ -4,7 +4,8 @@ const {
   _,
   name,
   label,
-  rm,
+  rm = false,
+  d = false,
   ...mhddosArgs
 } = argv;
 
@@ -13,7 +14,7 @@ const mhddosFlags = Object.entries(mhddosArgs).map(([key, value]) => {
   return `${key.length === 1 ? '-' : '--'}${key}=${value}`;
 });
 
-const dockerFlags = ['-dit', rm ? '--rm' : '--restart=unless-stopped', '--pull=always'];
+const dockerFlags = ['-it', `-d=${d}`, rm ? '--rm' : '--restart=unless-stopped', '--pull=always'];
 const dockerImage = 'ghcr.io/porthole-ascend-cinnamon/mhddos_proxy:latest';
 
 if (name) {
