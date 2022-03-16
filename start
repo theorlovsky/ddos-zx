@@ -9,17 +9,12 @@ const {
 } = argv;
 
 const targets = _.slice(1);
-
-if ('c' in mhddosArgs && targets.length) {
-  console.log('Both targets and config are provided, you should choose only one of them');
-  await quiet($`exit 1`);
-}
-
 const mhddosFlags = Object.entries(mhddosArgs).map(([key, value]) => {
   return `${key.length === 1 ? '-' : '--'}${key}=${value}`;
 });
 
 const dockerFlags = ['-dit', rm ? '--rm' : '--restart=unless-stopped', '--pull=always'];
+const dockerImage = 'ghcr.io/porthole-ascend-cinnamon/mhddos_proxy:latest';
 
 if (name) {
   dockerFlags.push(`--name=${name}`);
@@ -35,4 +30,4 @@ if (label) {
   }
 }
 
-await $`docker run ${dockerFlags} portholeascend/mhddos_proxy:latest ${targets} --debug ${mhddosFlags}`;
+await $`docker run ${dockerFlags} ${dockerImage} --debug ${mhddosFlags} ${targets}`;
